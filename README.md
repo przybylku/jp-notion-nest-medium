@@ -1,85 +1,120 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Notion Database Integration with Nest.js
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This project demonstrates how to create and manage items in a Notion database using Nest.js and the Notion API. It's a simple setup to show how you can use Nest.js for interacting with Notion, allowing you to programmatically add pages to your Notion database.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
 
-## Description
+- 📝 **Add a New Item to Notion Database**: The app allows you to create a new page in your Notion database by sending a POST request with the required parameters.
+- 🔐 **Notion API Integration**: Uses the official Notion SDK to interact with the database and handle page creation.
+- 🧾 **DTO for Data Validation**: Ensures the data being passed to the API has the correct format with the help of Nest.js DTOs (Data Transfer Objects).
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Getting Started
 
-## Project setup
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v14.x or later)
+- [Nest.js CLI](https://docs.nestjs.com/) (`npm install -g @nestjs/cli`)
+- [Notion API Key](https://www.notion.so/my-integrations) (create one from the Notion developer dashboard)
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/your-username/notion-nestjs-integration.git
+   cd notion-nestjs-integration
+   ```
+
+2. Install the dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Create a `.env` file in the root directory and add your Notion API credentials:
+
+   ```bash
+   API_KEY=your-notion-api-key
+   DATABASE_ID=your-notion-database-id
+   ```
+
+4. Start the development server:
+
+   ```bash
+   npm run start:dev
+   ```
+
+### Usage
+
+1. Start your local server using `npm run start:dev`.
+2. Use Postman or any API testing tool to send a `POST` request to `http://localhost:3000/`.
+3. The body of your request should contain the following fields:
+
+   ```json
+   {
+     "Name": "My New Page",
+     "Content": "This is a sample content for my Notion page.",
+     "Published": "2024-01-01",
+     "ReadingTime": 5
+   }
+   ```
+
+4. The API will respond with the newly created page details from your Notion database.
+
+### Example Request
+
+Here’s an example `POST` request using **cURL**:
 
 ```bash
-$ npm install
+curl -X POST http://localhost:3000/ \\
+-H 'Content-Type: application/json' \\
+-d '{
+  "Name": "My New Notion Page",
+  "Content": "Here is some content for the new page",
+  "Published": "2024-09-01",
+  "ReadingTime": 5
+}'
 ```
 
-## Compile and run the project
+### DTO Validation
 
-```bash
-# development
-$ npm run start
+The following fields are required and validated via the DTO:
 
-# watch mode
-$ npm run start:dev
+- `Name` (string): The title of the new page.
+- `Content` (string): The content of the page.
+- `Published` (string, date): The publication date.
+- `ReadingTime` (number): Estimated reading time.
 
-# production mode
-$ npm run start:prod
+### Project Structure
+
+```plaintext
+src/
+│
+├── app.controller.ts     # Defines the API endpoints
+├── app.module.ts         # Main module for the app
+├── app.service.ts        # Contains the logic for interacting with Notion API
+├── dto/                  # Contains the DTO for data validation
+│   └── createNotionItem.ts
+└── main.ts               # Entry point for the app
 ```
 
-## Run tests
+### Notion Setup
 
-```bash
-# unit tests
-$ npm run test
+To integrate this project with Notion:
 
-# e2e tests
-$ npm run test:e2e
+1. Create a Notion database.
+2. Copy your database ID by selecting "Copy link to view" from the Notion UI.
+3. Add the database ID and API key to your `.env` file as shown above.
 
-# test coverage
-$ npm run test:cov
-```
+### API Key and Database ID
 
-## Resources
+- **API Key**: You can create an API key from your Notion integrations dashboard.
+- **Database ID**: To find your database ID, open the database in Notion, click the "⋮" menu in the top right, and choose "Copy link to view." Extract the database ID from the URL.
 
-Check out a few resources that may come in handy when working with NestJS:
+## Authors
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+- [@przybylku](https://github.com/przybylku)
 
-## Support
+### License
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
